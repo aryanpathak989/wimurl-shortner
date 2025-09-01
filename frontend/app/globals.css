@@ -1,0 +1,329 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    /* Professional blue */
+    --primary: 215 100% 40%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    /* Professional teal accent */
+    --accent: 180 65% 45%;
+    --accent-foreground: 210 40% 98%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 215 100% 40%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* More professional dark mode with softer colors */
+    --background: 222 18% 12%;
+    --foreground: 210 20% 98%;
+
+    --card: 222 16% 14%;
+    --card-foreground: 210 20% 98%;
+
+    --popover: 222 16% 14%;
+    --popover-foreground: 210 20% 98%;
+
+    /* Softer blue for dark mode */
+    --primary: 215 70% 60%;
+    --primary-foreground: 222 16% 14%;
+
+    --secondary: 217 16% 20%;
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 217 16% 18%;
+    --muted-foreground: 215 16% 70%;
+
+    /* Softer teal accent for dark mode */
+    --accent: 180 60% 50%;
+    --accent-foreground: 222 16% 14%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 217 16% 22%;
+    --input: 217 16% 22%;
+    --ring: 215 70% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Updated gradient utilities with more professional colors */
+  .gradient-primary {
+    @apply bg-gradient-to-br from-primary/90 via-primary to-primary/80 text-primary-foreground;
+  }
+
+  .gradient-accent {
+    @apply bg-gradient-to-br from-accent/90 via-accent to-accent/80 text-accent-foreground;
+  }
+
+  .gradient-hero {
+    @apply bg-gradient-to-br from-primary/5 via-background to-accent/5 relative overflow-hidden;
+  }
+
+  .gradient-card-hover {
+    @apply hover:bg-gradient-to-br hover:from-primary/5 hover:to-background transition-all duration-300;
+  }
+
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent;
+  }
+
+
+  /* Professional subtle gradient backgrounds */
+  .gradient-subtle {
+    @apply bg-gradient-to-r from-primary/10 to-accent/10;
+  }
+
+  .gradient-timeline {
+    @apply bg-gradient-to-b from-background via-primary/5 to-background relative overflow-hidden;
+  }
+
+  /* Animation utilities */
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-in-out forwards;
+    opacity: 0;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 0.6s;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-in-out forwards;
+    opacity: 0;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.6s ease-in-out forwards;
+    opacity: 0;
+  }
+
+  .animate-pulse-slow {
+    animation: pulseSlow 3s infinite;
+  }
+
+  .animate-gradient-shift {
+    animation: gradientShift 15s ease infinite;
+  }
+
+  .hover-scale {
+    transition: transform 0.3s ease;
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+
+  
+  /* Star animation */
+  .shooting-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: hsl(var(--primary));
+    border-radius: 50%;
+    opacity: 0;
+    animation: shootingStar 6s linear infinite;
+  }
+
+  .Toastify__toast--success {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+/* Override Toastify error toast background */
+.Toastify__toast--error {
+  background: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
+}
+
+/* Override Toastify info toast background */
+.Toastify__toast--info {
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* From Uiverse.io by Z4drus */ 
+.loader {
+  --uib-size: 100px;
+  --uib-color: rgb(51, 172, 241);
+  --uib-speed: 1.4s;
+  --uib-bg-opacity: 0.1;
+  height: var(--uib-size);
+  width: var(--uib-size);
+  transform-origin: center;
+  overflow: visible;
+}
+
+.car {
+  fill: none;
+  stroke: var(--uib-color);
+  stroke-dasharray: 15, 85;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  animation: travel var(--uib-speed) linear infinite;
+  will-change: stroke-dasharray, stroke-dashoffset;
+  transition: stroke 0.5s ease;
+}
+
+.track {
+  stroke: var(--uib-color);
+  opacity: var(--uib-bg-opacity);
+  transition: stroke 0.5s ease;
+}
+
+@keyframes travel {
+  0% {
+    stroke-dashoffset: 0;
+  }
+
+  100% {
+    stroke-dashoffset: -100;
+  }
+}
+
+
+  @keyframes shootingStar {
+    0% {
+      transform: translate(0, 0) rotate(45deg) scale(0);
+      opacity: 0;
+    }
+    1% {
+      opacity: 1;
+    }
+    5% {
+      transform: translate(120px, 120px) rotate(45deg) scale(1);
+      opacity: 0;
+    }
+    100% {
+      transform: translate(120px, 120px) rotate(45deg) scale(1);
+      opacity: 0;
+    }
+  }
+
+  /* Grid animation */
+  .animated-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: 50px 50px;
+    background-image: linear-gradient(to right, hsla(var(--primary) / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, hsla(var(--primary) / 0.05) 1px, transparent 1px);
+    animation: gridMove 20s linear infinite;
+  }
+
+  @keyframes gridMove {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 50px 50px;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes pulseSlow {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
