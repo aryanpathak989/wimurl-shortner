@@ -8,10 +8,6 @@ const TG_API_HASH=process.env.TG_API_HASH
 const TG_SESSION=process.env.TG_SESSION
 
 
-if (!TG_API_ID || !TG_API_HASH || !TG_SESSION) {
-  throw new Error('TG_API_ID, TG_API_HASH and TG_SESSION must all be set');
-}
-
 class TelegramService {
   static #client;
   static #connected = false;
