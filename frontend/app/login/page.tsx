@@ -32,7 +32,7 @@ export default function AuthProvidersOnly() {
     try {
       setLoading("google");
       const response = await fetch(
-        "http://localhost:4000/user/auth/google/url",
+        `${process.env.NEXT_PUBLIC_API_URL}/user/auth/google/url`,
         { credentials: "include" }
       );
       const data = await response.json();
