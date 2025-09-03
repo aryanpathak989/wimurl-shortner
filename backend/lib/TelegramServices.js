@@ -3,11 +3,10 @@ const { TelegramClient, Api } = require('telegram');
 const { StringSession }      = require('telegram/sessions');
 const  {buildLinkProOtpHtml} =require('../util/linkproOtpTemplate');
 
-const {
-  TG_API_ID,        // numeric, e.g. 123456
-  TG_API_HASH,      // 32-char hex
-  TG_SESSION        // long base64 string you pasted in .env
-} = process.env;
+const TG_API_ID = process.env.TG_API_ID
+const TG_API_HASH=process.env.TG_API_HASH
+const TG_SESSION=process.env.TG_SESSION
+
 
 if (!TG_API_ID || !TG_API_HASH || !TG_SESSION) {
   throw new Error('TG_API_ID, TG_API_HASH and TG_SESSION must all be set');
