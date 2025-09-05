@@ -31,6 +31,7 @@ export default function AuthProvidersOnly() {
   const handleGoogleSignup = async () => {
     try {
       setLoading("google");
+      console.log("This is the base url"+ process.env.NEXT_PUBLIC_API_URL)
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/user/auth/google/url`,
         { credentials: "include" }
