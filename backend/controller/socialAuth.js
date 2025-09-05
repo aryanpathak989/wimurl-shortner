@@ -52,7 +52,7 @@ const findOrCreateUser = async (userData) => {
 
 // Google OAuth routes
 exports.getGoogleAuthURL = (req, res) => {
-  const url = `http://localhost:4000/user/auth/google`;
+  const url = `${process.env.FRONTEND_URL}/user/auth/google`;
   res.json({ url });
 };
 
