@@ -71,21 +71,6 @@ const eventProcessBatch = async () => {
 
 }
 
-setInterval(eventProcessBatch, 60 * 100);
-
-// const eventWorker = new Worker('tracking-event-queue', async (job)=>{
-//     try{
-//         const {data} = job;
-//         console.log(data)
-//         throw Error("Hi there is an error")
-//     }
-//     catch(err){
-//         console.log(err)
-//         throw Error("Hi there is an error")
-//     }
-// },{
-//     connection:redisConfig,
-//     concurrency:1
-// })
+setInterval(eventProcessBatch, 60 * 500);
 
 redis.connect()
