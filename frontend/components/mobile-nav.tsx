@@ -93,7 +93,7 @@ export function MobileNav({ links }: MobileNavProps) {
                   <Link href="/login">Log in</Link>
                 </Button>
                 <Button asChild className="w-full gradient-primary">
-                  <Link href="/signup">Sign up free</Link>
+                  <Link href="/login">Sign up free</Link>
                 </Button>
                 <p className="text-xs text-center text-muted-foreground mt-2">
                   Free forever – supported by relevant ads
