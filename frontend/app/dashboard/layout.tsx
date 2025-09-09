@@ -102,10 +102,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Custom Desktop Sidebar */}
       <aside className="hidden md:flex w-64 flex-col border-r b">
         <div className="flex items-center gap-2 px-6 py-4 border-b">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary">
-            <Link2Icon className="h-4 w-4 text-primary-foreground" />
-          </div>
-          <span className="text-xl font-bold">shrl.me</span>
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center gap-3"
+        >
+          <img
+            src="https://ik.imagekit.io/2ncgakzvm/fontbolt%20(3).png?updatedAt=1757440478189"
+            alt="shrl.me logo"
+            className="h-6 object-contain"
+          />
+  </motion.div>
         </div>
 <nav className="flex flex-col flex-1 justify-between p-6 space-y-4">
   <div className="flex flex-col space-y-3">
