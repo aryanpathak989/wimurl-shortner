@@ -366,22 +366,22 @@ const handleRedditClick = (link: string) => {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <Button variant="outline" size="sm" onClick={() => { handleCopyLink(data?.shortUrl) }} className="bg-white/50 dark:bg-slate-800/50">
+            <Button variant="outline" size="sm" onClick={() => { handleCopyLink(data?.shortUrl) }}>
               <Copy className="h-4 w-4 mr-2" />
               Copy Link
             </Button>
-            <Button variant="outline" size="sm" className="bg-white/50 dark:bg-slate-800/50" onClick={()=>{setShowQrCode(true)}}>
+            <Button variant="outline" size="sm" className="" onClick={()=>{setShowQrCode(true)}}>
               <QrCode className="h-4 w-4 mr-2" />
               QR Code
             </Button>
-            <Button variant="outline" size="sm" className="bg-white/50 dark:bg-slate-800/50" onClick={() => { setShowShareTab(true) }}>
+            <Button variant="outline" size="sm" className="" onClick={() => { setShowShareTab(true) }}>
               <Share className="h-4 w-4 mr-2" />
               Share
             </Button>
             <Button
               variant="outline"
               size="sm"
-              className="bg-white/50 dark:bg-slate-800/50"
+              className=""
               onClick={() => setEditOpen(true)}
             >
               <Edit className="h-4 w-4 mr-2" />

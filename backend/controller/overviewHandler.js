@@ -3,6 +3,17 @@ const Url = require('../models/TableUrl');
 const Tracking = require('../models/Tracking');
 const tblQrCode = require('../models/qrCode');
 const moment = require('moment');
+const { s3 } = require('../config/aws');
+
+function generatePresignedUrl(bucketName, key, expiresInSeconds = 3600) {
+  const params = {
+    Bucket: bucketName,
+    Key: key,
+    Expires: expiresInSeconds, // Link expiration time in seconds (default 1 hour)
+  };
+
+  return s3.getSignedUrlPromise('getObject', params);
+}
 
 exports.getOverview = async (req, res) => {
   try {
@@ -544,7 +555,15 @@ const url = await Url.findOne({
 
    let qrImageUrl = null
    if(qrUrlData){
-    qrImageUrl = qrUrlData.imageUrl
+    const shortcode = url.shortUrl
+     const bucketName = process.env.AWS_BUCKET_NAME;
+     const key = `test/${shortcode}.png`
+       try {
+          qrImageUrl = await generatePresignedUrl(bucketName, key);
+          console.log('Generated pre-signed URL:', url);
+        } catch (error) {
+            console.error('Error generating pre-signed URL:', error);
+        }
    }
 
     const thisMonthTracking = await Tracking.findAll({

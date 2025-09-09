@@ -276,7 +276,7 @@ const { isAuthenticated, profile, firstName } = useAuthProfile()
               <div className="space-y-2">
                 <h2 className="text-2xl font-bold tracking-tighter md:text-3xl/tight">Free Forever</h2>
                 <p className="max-w-[600px] text-muted-foreground md:text-lg">
-                  LinkPro is completely free to use, supported by relevant, non-intrusive ads. No hidden fees, no
+                  shrl.me is completely free to use. No hidden fees, no
                   premium tiers – just powerful link management for everyone.
                 </p>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="pt-4">
@@ -297,7 +297,7 @@ const { isAuthenticated, profile, firstName } = useAuthProfile()
           <div className="flex items-center gap-2">
             <Link2 className="h-5 w-5 text-primary" />
             <p className="text-sm leading-loose text-muted-foreground md:text-left">
-              &copy; {new Date().getFullYear()} LinkPro. All rights reserved.
+              &copy; {new Date().getFullYear()} Shrl.me. All rights reserved.
             </p>
           </div>
           <div className="flex gap-4">

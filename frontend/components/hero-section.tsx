@@ -230,7 +230,7 @@ export function HeroSection() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-border text-foreground hover:bg-muted px-8 py-3 text-lg font-medium"
+                  className="border-border text-foreground px-8 py-3 text-lg font-medium"
                   asChild
                 >
                   <Link href="#features">

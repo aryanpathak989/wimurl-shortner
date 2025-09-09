@@ -12,17 +12,6 @@ const TblRedirects = require("../models/redirectUrl")
 const QRCode = require("../models/qrCode");
 const TableUsage = require("../models/TableUsage");
 const tblRedirects = require("../models/redirectUrl");
-const { type } = require("os");
-
-const dbPath = path.join(
-  'C:',
-  'Users',
-  'Aryan',
-  'Downloads',
-  'GeoLite2-City_20250603',
-  'GeoLite2-City_20250603',
-  'GeoLite2-City.mmdb'
-);
 
 async function generateUniqueShortCode() {
   const MAX_ATTEMPTS = 3;  // Even 3 attempts is sufficient
@@ -59,8 +48,7 @@ async function generateAndUploadQRCode(shortcode) {
     Bucket: process.env.AWS_BUCKET_NAME,
     Key: `test/${shortcode}.png`,
     Body: qrBuffer,
-    ContentType: 'image/png',
-    ACL: 'public-read'
+    ContentType: 'image/png'
   };
 
   const uploadResult = await s3.upload(uploadParams).promise();

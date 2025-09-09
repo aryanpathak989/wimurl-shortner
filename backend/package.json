@@ -1,8 +1,8 @@
 {
-  "scripts": {
-      "dev": "cross-env NODE_ENV=testing nodemon index.js",
-      "start": "cross-env NODE_ENV=production node index.js"
-  },
+"scripts": {
+  "dev": "cross-env NODE_ENV=testing concurrently \"nodemon index.js\" \"nodemon trackPublisher.js\"",
+  "start": "cross-env NODE_ENV=production concurrently \"node index.js\" \"node trackPublisher.js\""
+},
   "dependencies": {
     "aws-sdk": "^2.1692.0",
     "axios": "^1.9.0",
@@ -35,6 +35,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "cross-env": "^10.0.0"
   }
 }

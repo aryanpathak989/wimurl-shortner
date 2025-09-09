@@ -28,8 +28,8 @@ const PORT = process.env.PORT || 4000
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-  origin: "https://app.shrl.me",
-  credentials: true,   // important for cookies/sessions
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
 }));
 // Initialize Passport
 app.use(passport.initialize())

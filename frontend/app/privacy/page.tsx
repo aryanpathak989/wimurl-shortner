@@ -103,49 +103,49 @@ export default function PrivacyPage() {
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
-        className="w-full max-w-3xl bg-white/80 rounded-2xl p-8 shadow-lg"
+        className="w-full max-w-3xl bg-muted/80 rounded-2xl p-8 shadow-lg"
       >
         <h1 className="text-4xl font-bold text-primary mb-4 text-center">Privacy Policy</h1>
-        <p className="mb-6 text-gray-700 text-center">
+        <p className="mb-6  text-center">
           Last updated: <span className="font-medium">September 1, 2025</span>
         </p>
         
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-foreground mb-2">1. Information We Collect</h2>
-          <p className="text-gray-700">
+          <p className="">
             We collect basic account information (such as your email address and authentication provider) to enable your login and personalize your experience. We do not access your private link content.
           </p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-foreground mb-2">2. How We Use Information</h2>
-          <p className="text-gray-700">
+          <p className="">
             Information is used to provide and improve our services, maintain security, and communicate important updates. We never sell your personal data to third parties.
           </p>
         </section>
         
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-foreground mb-2">3. Cookies & Analytics</h2>
-          <p className="text-gray-700">
+          <p className="">
             We use minimal, privacy-friendly cookies and analytics strictly to understand platform usage and enhance performance.
           </p>
         </section>
 
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-foreground mb-2">4. Data Security</h2>
-          <p className="text-gray-700">
+          <p className="">
             We implement industry-standard security measures to protect your account and data. However, no method of internet transmission is 100% secure.
           </p>
         </section>
         
         <section className="mb-8">
           <h2 className="text-2xl font-semibold text-foreground mb-2">5. Your Rights</h2>
-          <p className="text-gray-700">
+          <p className="">
             You may request account deletion or correction of your information at any time. Contact us via support for data requests.
           </p>
         </section>
         
-        <div className="text-sm mt-10 text-center text-gray-600">
+        <div className="text-sm mt-10 text-center text-foreground/70">
           Have questions? Check our <Link href="/terms" className="underline decoration-dotted underline-offset-4 text-primary font-medium">Terms & Conditions</Link>.
         </div>
       </motion.div>
