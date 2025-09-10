@@ -56,8 +56,8 @@ export const metadata: Metadata = {
     images: ["https://ik.imagekit.io/2ncgakzvm/fontbolt%20(3).png?updatedAt=1757440478189"],
   },
   icons: {
-    icon: "https://ik.imagekit.io/2ncgakzvm/fontbolt%20(3).png?updatedAt=1757440478189",
-    apple: "https://ik.imagekit.io/2ncgakzvm/fontbolt%20(3).png?updatedAt=1757440478189",
+    icon: "/favicon.png",
+    apple: "/favicon.png",
   },
   manifest: "/site.webmanifest",
   category: "technology",
