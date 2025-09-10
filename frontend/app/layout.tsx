@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Manrope } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -60,9 +60,14 @@ export const metadata: Metadata = {
     apple: "https://ik.imagekit.io/2ncgakzvm/fontbolt%20(3).png?updatedAt=1757440478189",
   },
   manifest: "/site.webmanifest",
-  themeColor: "#ffffff",
-  viewport: { width: "device-width", initialScale: 1 },
   category: "technology",
+};
+
+// ✅ Move viewport + themeColor here
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({

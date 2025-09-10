@@ -20,7 +20,7 @@ function TimelineItem({ step, title, description, icon, isLast = false }: Timeli
     <div className="relative">
       {/* Timeline connector */}
       {!isLast && (
-        <div className="absolute left-7 top-12 h-full w-0.5 bg-gradient-to-b from-primary via-primary/50 to-accent md:left-1/2 md:ml-0 md:translate-x-0" />
+        <div className="hidden md:block absolute left-7 top-12 h-full w-0.5 bg-gradient-to-b from-primary via-primary/50 to-accent md:left-1/2 md:ml-0 md:translate-x-0" />
       )}
 
       <FadeIn direction="up" className="grid items-center gap-8 md:grid-cols-2">
@@ -35,7 +35,7 @@ function TimelineItem({ step, title, description, icon, isLast = false }: Timeli
             <h3 className="text-2xl font-bold">{title}</h3>
           </div>
           <p className="text-muted-foreground">{description}</p>
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary backdrop-blur-sm">
+          <div className="hidden md:flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary backdrop-blur-sm">
             {icon}
           </div>
         </div>

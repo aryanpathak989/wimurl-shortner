@@ -192,87 +192,95 @@ const { isAuthenticated, profile, firstName } = useAuthProfile()
         <section id="how-it-works">
           <ProductJourney />
         </section>
+<section className="w-full py-12 md:py-24 lg:py-32">
+  <div className="container px-4 md:px-6">
+    <FadeIn
+      direction="up"
+      className="flex flex-col items-center justify-center space-y-4 text-center"
+    >
+      <div className="space-y-2">
+        <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
+          <span className="gradient-text">Powerful Analytics</span>
+        </h2>
+        <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+          Gain valuable insights into your audience with our comprehensive analytics dashboard.
+        </p>
+      </div>
+    </FadeIn>
 
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <FadeIn direction="up" className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">
-                  <span className="gradient-text">Powerful Analytics</span>
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Gain valuable insights into your audience with our comprehensive analytics dashboard.
-                </p>
-              </div>
-            </FadeIn>
-            <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
-              <FadeIn direction="right" className="flex flex-col justify-center space-y-4">
-                <ul className="grid gap-6">
-                  <motion.li
-                    className="flex items-start gap-4"
-                    whileHover={{ x: 5 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-                      <MousePointerClick className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-lg font-medium">Total Clicks</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Track the total number of clicks on your shortened links over time.
-                      </p>
-                    </div>
-                  </motion.li>
-                  <motion.li
-                    className="flex items-start gap-4"
-                    whileHover={{ x: 5 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-                      <BarChart3 className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-lg font-medium">Geographic Insights</h4>
-                      <p className="text-sm text-muted-foreground">
-                        See where your audience is located with country and region-based analytics.
-                      </p>
-                    </div>
-                  </motion.li>
-                  <motion.li
-                    className="flex items-start gap-4"
-                    whileHover={{ x: 5 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-                      <Smartphone className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-lg font-medium">Device Breakdown</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Understand which devices your audience uses to access your content.
-                      </p>
-                    </div>
-                  </motion.li>
-                  <motion.li
-                    className="flex items-start gap-4"
-                    whileHover={{ x: 5 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                  >
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
-                      <ExternalLink className="h-4 w-4 text-primary" />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-lg font-medium">UTM Parameter Tracking</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Track campaign performance with detailed UTM parameter analytics.
-                      </p>
-                    </div>
-                  </motion.li>
-                </ul>
-              </FadeIn> 
+    {/* Centered Section */}
+    <div className="mx-auto flex max-w-3xl justify-center py-12">
+      <FadeIn direction="up" className="w-full justify-center">
+        <ul className="grid gap-8">
+          <motion.li
+            className="flex items-start gap-4"
+            whileHover={{ x: 5 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+              <MousePointerClick className="h-4 w-4 text-primary" />
             </div>
-          </div>
-        </section>
+            <div className="space-y-1">
+              <h4 className="text-lg font-medium">Total Clicks</h4>
+              <p className="text-sm text-muted-foreground">
+                Track the total number of clicks on your shortened links over time.
+              </p>
+            </div>
+          </motion.li>
+
+          <motion.li
+            className="flex items-start gap-4"
+            whileHover={{ x: 5 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+              <BarChart3 className="h-4 w-4 text-primary" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-lg font-medium">Geographic Insights</h4>
+              <p className="text-sm text-muted-foreground">
+                See where your audience is located with country and region-based analytics.
+              </p>
+            </div>
+          </motion.li>
+
+          <motion.li
+            className="flex items-start gap-4"
+            whileHover={{ x: 5 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+              <Smartphone className="h-4 w-4 text-primary" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-lg font-medium">Device Breakdown</h4>
+              <p className="text-sm text-muted-foreground">
+                Understand which devices your audience uses to access your content.
+              </p>
+            </div>
+          </motion.li>
+
+          <motion.li
+            className="flex items-start gap-4"
+            whileHover={{ x: 5 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+              <ExternalLink className="h-4 w-4 text-primary" />
+            </div>
+            <div className="space-y-1">
+              <h4 className="text-lg font-medium">UTM Parameter Tracking</h4>
+              <p className="text-sm text-muted-foreground">
+                Track campaign performance with detailed UTM parameter analytics.
+              </p>
+            </div>
+          </motion.li>
+        </ul>
+      </FadeIn>
+    </div>
+  </div>
+</section>
+
 
         <section className="w-full py-12 md:py-16 bg-muted/30">
           <div className="container px-4 md:px-6">

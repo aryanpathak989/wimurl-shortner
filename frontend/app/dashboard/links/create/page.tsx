@@ -34,12 +34,17 @@ export default function Page() {
 
   const { mutate: createLinkMutate, isPending: isCreating } = useMutation<CreateLinkPayload, any, CreateLinkPayload>({
     mutationFn: (payload: CreateLinkPayload) => createLink(payload),
-    onError: (err: any) => toast.error(err.message),
-    onSuccess: (data: any) => {
-      setLinkCreatedData(data?.data)
-      setLinkCreatedModule(true)
-      toast.success("Link created successfully!")
-    }
+  onSuccess: (data: any) => {
+    setLinkCreatedData(data?.data)
+    setLinkCreatedModule(true)
+    toast.success("Link created successfully!")
+  },
+  onError: (err: any) => {
+    // Try to get error message from API response, fallback to generic message
+    const errorMessage =
+      err?.response?.data?.message || err?.message || "Something went wrong!";
+    toast.error(errorMessage);
+  },
   })
 
   // Debounced custom back half checking
@@ -102,7 +107,7 @@ export default function Page() {
         </div>
         <div>
           <p className='m-0 text-sm font-[500]'>
-            You can create <b>{data.data.links.limit - data.data.links.used}</b> more links this month. <span className='underline cursor-pointer'>Upgrade for more.</span>
+            You can create <b>{data.data.links.limit - data.data.links.used < 0 ? 0 : data.data.links.limit - data.data.links.used}</b> more links this month. <span className='underline cursor-pointer'>Upgrade for more.</span>
           </p>
         </div>
         <div className='bg-muted/60 rounded-lg w-full p-5 space-y-6 mt-5'>
@@ -135,7 +140,7 @@ export default function Page() {
               <div className="relative">
                 <Input
                   id="customBackhHalf"
-                  placeholder="/custom-keyword"
+                  placeholder="custom-keyword"
                   className="h-[25px] flex-1 rounded-l-none p-5"
                   value={custombackHalf}
                   onChange={e => setCustomBackHalf((e.target as HTMLInputElement).value)}
@@ -150,7 +155,7 @@ export default function Page() {
               </div>
             </div>
             <div className='md:col-span-11 text-sm mt-3'>
-              <p className='m-0 text-sm font-[500]'>You can create <b>{data.data.customHalf.limit - data.data.customHalf.used}</b> more custom back-halves this month. <span className='underline cursor-pointer'>Upgrade for more.</span></p>
+              <p className='m-0 text-sm font-[500]'>You can create <b>{data.data.customHalf.limit - data.data.customHalf.used < 0 ? 0 : data.data.customHalf.limit - data.data.customHalf.used }</b> more custom back-halves this month. <span className='underline cursor-pointer'>Upgrade for more.</span></p>
             </div>
           </div>
           <div className='pt-6 pb-6'>
@@ -160,7 +165,7 @@ export default function Page() {
                 <div className='flex justify-between'>
                   <h3 className='text-lg font-semibold'>QR Code</h3>
                   <div>
-                    <span className='mr-2'>{data.data.qrcodes.limit - data.data.qrcodes.used} Left</span>
+                    <span className='mr-2'>{data.data.qrcodes.limit - data.data.qrcodes.used < 0 ? 0 :data.data.qrcodes.limit - data.data.qrcodes.used} Left</span>
                     <Switch onClick={handleQrCodeSwitch} checked={isQrTabActive} />
                   </div>
                 </div>
@@ -172,7 +177,7 @@ export default function Page() {
             <button
               className="px-6 py-2 bg-primary rounded-md text-white font-semibold disabled:opacity-50"
               onClick={handleCreate}
-              disabled={isCreating}
+              disabled={isCreating || (destinationUrl=="" || title=="")}
             >
               {isCreating ? "Creating..." : "Create"}
             </button>

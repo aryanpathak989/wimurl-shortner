@@ -16,6 +16,7 @@ import {
 
   MousePointer2,
   Activity,
+  Plus,
 } from "lucide-react"
 
 
@@ -149,7 +150,7 @@ Lets see what your links are doing in past {getFilterLabel(filterSelected)}</p>
           </div>
         </div>
 
-      <div className="flex items-start justify-end w-full">
+      <div className="flex items-start justify-end gap-3 w-full">
 
         {/* Right Side Dropdown */}
         <Select defaultValue="7days" onValueChange={(value) =>{setFilterSelected(value)} }>
@@ -165,6 +166,11 @@ Lets see what your links are doing in past {getFilterLabel(filterSelected)}</p>
             <SelectItem value="1year">Last 1 Year</SelectItem>
           </SelectContent>
         </Select>
+
+                <Button className="gap-2" onClick={()=>{router.push("/dashboard/links/create")}}>
+          <Plus className="h-4 w-4" />
+          Create Link
+        </Button>
       </div>
 
       <motion.div
