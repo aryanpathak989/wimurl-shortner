@@ -50,6 +50,7 @@
             if (referrerUrl) {
                 try {
                     const refHost = new URL(referrerUrl).origin + '/';
+                    console.log("This is refHost: "+ refHost)
                     referrerSource = referrenceKey[refHost] || 'Direct';
                 } catch (e) {
                     console.warn('Invalid referrer URL:', referrerUrl);
