@@ -2,14 +2,20 @@
 import Link from "next/link"
 import Image from "next/image"
 import {
+  Activity,
   ArrowRight,
+  BadgePercent,
   BarChart3,
+  BrainCircuit,
   ExternalLink,
   FileText,
+  Globe2,
   Layers,
   Link2,
   MousePointerClick,
   Smartphone,
+  Tag,
+  TrainTrack,
 } from "lucide-react"
 import { motion } from "framer-motion"
 
@@ -148,6 +154,39 @@ const { isAuthenticated, profile, firstName } = useAuthProfile()
                   <h3 className="text-xl font-bold">Link Shortening</h3>
                   <p className="text-muted-foreground">
                     Shorten URLs and track performance metrics like clicks, location, device type, and UTM parameters.
+                  </p>
+                </div>
+              </motion.div>
+                            <motion.div className="flex flex-col justify-center space-y-4 rounded-lg border bg-background p-6 shadow-sm gradient-card-hover hover-lift">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                  <Tag className="h-6 w-6 text-primary" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold">Branded Links</h3>
+                  <p className="text-muted-foreground">
+                    Create custom branded short links to boost trust, improve recognition, and strengthen marketing impact.
+                  </p>
+                </div>
+              </motion.div>
+                            <motion.div className="flex flex-col justify-center space-y-4 rounded-lg border bg-background p-6 shadow-sm gradient-card-hover hover-lift">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                  <Activity className="h-6 w-6 text-primary" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold">UTM Tracking</h3>
+                  <p className="text-muted-foreground">
+                    Add UTM parameters and track campaign sources, mediums, and performance to optimize marketing efforts
+                  </p>
+                </div>
+              </motion.div>
+                            <motion.div className="flex flex-col justify-center space-y-4 rounded-lg border bg-background p-6 shadow-sm gradient-card-hover hover-lift">
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                  <Globe2 className="h-6 w-6 text-primary" />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-bold">Geographical Insight</h3>
+                  <p className="text-muted-foreground">
+                    Gain geographic insights to analyze location-based engagement and improve regional targeting for better conversions
                   </p>
                 </div>
               </motion.div>
