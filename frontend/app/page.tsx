@@ -36,7 +36,7 @@ const { isAuthenticated, profile, firstName } = useAuthProfile()
     <div className="flex min-h-screen flex-col">
 
 <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-  <div className="container flex h-16 items-center justify-between px-4 md:px-8">
+  <div className=" flex h-16 items-center justify-between px-4 md:px-8">
     {/* Logo & Brand */}
   <motion.div
     initial={{ opacity: 0, x: -20 }}
@@ -126,7 +126,7 @@ const { isAuthenticated, profile, firstName } = useAuthProfile()
         <HeroSection />
 
         <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-muted/50">
-          <div className="container px-4 md:px-6">
+          <div className="px-4 md:px-6">
             <FadeIn direction="up" className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg gradient-primary px-3 py-1 text-sm">Features</div>
@@ -193,7 +193,7 @@ const { isAuthenticated, profile, firstName } = useAuthProfile()
           <ProductJourney />
         </section>
 <section className="w-full py-12 md:py-24 lg:py-32">
-  <div className="container px-4 md:px-6">
+  <div className="px-4 md:px-6">
     <FadeIn
       direction="up"
       className="flex flex-col items-center justify-center space-y-4 text-center"
@@ -283,7 +283,7 @@ const { isAuthenticated, profile, firstName } = useAuthProfile()
 
 
         <section className="w-full py-12 md:py-16 bg-muted/30">
-          <div className="container px-4 md:px-6">
+          <div className="px-4 md:px-6">
             <FadeIn direction="up" className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <h2 className="text-2xl font-bold tracking-tighter md:text-3xl/tight">Free Forever</h2>
@@ -305,7 +305,7 @@ const { isAuthenticated, profile, firstName } = useAuthProfile()
         </section>
       </main>
       <footer className="w-full border-t bg-background">
-        <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
+        <div className="flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
           <div className="flex items-center gap-2">
             <Link2 className="h-5 w-5 text-primary" />
             <p className="text-sm leading-loose text-muted-foreground md:text-left">
