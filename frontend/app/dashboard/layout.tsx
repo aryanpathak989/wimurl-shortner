@@ -181,7 +181,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Main Content */}
       <div className="flex-1 overflow-y-scroll">
-        <main className="flex-1">
+        <main className="flex-1 mb-20">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}

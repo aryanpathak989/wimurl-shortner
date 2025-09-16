@@ -29,7 +29,7 @@
 
             const job = await redis.get(key);
             const jobData = JSON.parse(job)
-            const {ip,browser, os, deviceModel, deviceType, deviceVendor, referrerUrl, urlId } = jobData
+            const {ip,browser, os, deviceModel, deviceType, deviceVendor, referrerUrl, urlId, utmParameters } = jobData
             let city = null, region = null, country = null
             //processIp address
             try {
@@ -58,7 +58,7 @@
             }
 
             const date = moment().tz('Asia/Kolkata').format("YYYY-MM-DD")
-            bulkUploadTrackingData.push({urlId,ip,browser,os,deviceType,reference:referrerSource,deviceVendor,deviceModel,deviceType,city,region,country,date})
+            bulkUploadTrackingData.push({urlId,ip,browser,os,deviceType,reference:referrerSource,deviceVendor,deviceModel,deviceType,city,region,country,date,...utmParameters})
             await redis.del(key);
             console.log(`Deleted job key ${key} from Redis`);
         }

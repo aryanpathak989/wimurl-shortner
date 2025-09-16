@@ -1,69 +1,71 @@
 const Url = require("../models/TableUrl")
 const { nanoid } = require('nanoid');
 const redis = require('../lib/redis')
-const {referrenceKey} = require('../config/constant')
+const { referrenceKey } = require('../config/constant')
 const maxmind = require('maxmind');
 const path = require('path');
-const {s3} = require("../config/aws")
+const { s3 } = require("../config/aws")
 const qrCode = require('qrcode');
 
-const UAParser = require('ua-parser-js'); 
+const UAParser = require('ua-parser-js');
 const TblRedirects = require("../models/redirectUrl")
 const QRCode = require("../models/qrCode");
 const TableUsage = require("../models/TableUsage");
 const tblRedirects = require("../models/redirectUrl");
+const { Sequelize } = require("sequelize");
+const db = require("../lib/database");
 
 async function generateUniqueShortCode() {
-  const MAX_ATTEMPTS = 3;  // Even 3 attempts is sufficient
-  let attempts = 0;
-  let code;
+    const MAX_ATTEMPTS = 3;  // Even 3 attempts is sufficient
+    let attempts = 0;
+    let code;
 
-  while (attempts < MAX_ATTEMPTS) {
-    code = nanoid(7);
-    const exists = await Url.findOne({ where: { shortUrl: code } });
-    if (!exists) return code;
-    attempts++;
-  }
+    while (attempts < MAX_ATTEMPTS) {
+        code = nanoid(7);
+        const exists = await Url.findOne({ where: { shortUrl: code } });
+        if (!exists) return code;
+        attempts++;
+    }
 
-  // Fallback with longer ID
-  code = nanoid(10);
+    // Fallback with longer ID
+    code = nanoid(10);
     const exists = await Url.findOne({ where: { shortUrl: code } });
     if (exists) throw new Error("ShortUrl Collision Occurred. Please retry again");
     return code
 }
 
 async function generateAndUploadQRCode(shortcode) {
-  const actualUrl = process.env.BASE_URL + shortcode
-  console.log(actualUrl)
+    const actualUrl = process.env.BASE_URL + shortcode
+    console.log(actualUrl)
 
-  // Generate QR Code as a Buffer
-  const qrBuffer = await qrCode.toBuffer(actualUrl, {
-    type: 'png',
-    width: 300,
-    errorCorrectionLevel: 'H'
-  });
+    // Generate QR Code as a Buffer
+    const qrBuffer = await qrCode.toBuffer(actualUrl, {
+        type: 'png',
+        width: 300,
+        errorCorrectionLevel: 'H'
+    });
 
-  // Upload to S3
-  const uploadParams = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: `test/${shortcode}.png`,
-    Body: qrBuffer,
-    ContentType: 'image/png'
-  };
+    // Upload to S3
+    const uploadParams = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: `test/${shortcode}.png`,
+        Body: qrBuffer,
+        ContentType: 'image/png'
+    };
 
-  const uploadResult = await s3.upload(uploadParams).promise();
+    const uploadResult = await s3.upload(uploadParams).promise();
 
-  console.log('Uploaded QR Code URL:', uploadResult.Location);
-  return uploadResult.Location; // Return URL or store it in DB
+    console.log('Uploaded QR Code URL:', uploadResult.Location);
+    return uploadResult.Location; // Return URL or store it in DB
 }
 
 exports.urlShortner = async (req, res) => {
     try {
 
-        const { url , name, customBackHalf,isQrCode} = req.body;
+        const { url, name, customBackHalf, isQrCode } = req.body;
 
-        if(!url || !name){
-            return res.status(400).json({success:false,msg:"Url, name and Qrcode is neccessary"})
+        if (!url || !name) {
+            return res.status(400).json({ success: false, msg: "Url, name and Qrcode is neccessary" })
         }
 
         const userId = req.user.id;
@@ -73,17 +75,17 @@ exports.urlShortner = async (req, res) => {
 
 
         const userLimitData = await TableUsage.findAll({
-            where:{
-                user_id:userId,
-                month:todayMonth,
-                year:todayYear
+            where: {
+                user_id: userId,
+                month: todayMonth,
+                year: todayYear
             }
         })
 
         const userLimit = {
-            url:0,
-            customBackHalf:0,
-            qrCode:0
+            url: 0,
+            customBackHalf: 0,
+            qrCode: 0
         }
 
         const urlLimit = userLimitData.find(item => item.type === "links");
@@ -94,36 +96,36 @@ exports.urlShortner = async (req, res) => {
         userLimit.customBackHalf = customHalfLimit?.limitused ?? 0;
         userLimit.qrCode = qrCodeLimit?.limitused ?? 0;
 
-        if(userLimit.url >=50 ){
-            return res.status(400).json({success:false,msg:"You’ve reached your monthly URL creation limit."})
+        if (userLimit.url >= 50) {
+            return res.status(400).json({ success: false, msg: "You’ve reached your monthly URL creation limit." })
         }
 
-        if(customBackHalf && customBackHalf !="" && userLimit.customBackHalf >20){
-            return res.status(400).json({success:false,msg:"You’ve reached your monthly customBackHalf creation limit."})
+        if (customBackHalf && customBackHalf != "" && userLimit.customBackHalf > 20) {
+            return res.status(400).json({ success: false, msg: "You’ve reached your monthly customBackHalf creation limit." })
         }
 
 
-        if(isQrCode && userLimit.qrCode > 20){
-            return res.status(400).json({success:false,msg:"You’ve reached your monthly Qr Code creation limit."})
+        if (isQrCode && userLimit.qrCode > 20) {
+            return res.status(400).json({ success: false, msg: "You’ve reached your monthly Qr Code creation limit." })
         }
 
 
         //setting expirary of two months.
         const expiryDate = new Date()
-        expiryDate.setMonth(now.getMonth()+2)
+        expiryDate.setMonth(now.getMonth() + 2)
 
         try {
             new URL(url);
         } catch (error) {
-            return res.status(400).json({ 
-                success: false, 
-                message: "Invalid URL format" 
+            return res.status(400).json({
+                success: false,
+                message: "Invalid URL format"
             });
         }
 
         // Validate custom back-half if provided
         let shortCode;
-        if (customBackHalf && customBackHalf!='') {
+        if (customBackHalf && customBackHalf != '') {
             // Validate custom back-half format
             if (!/^[a-z0-9_-]{3,40}$/i.test(customBackHalf)) {
                 return res.status(400).json({
@@ -134,7 +136,7 @@ exports.urlShortner = async (req, res) => {
 
             // Check for reserved routes
             const reservedRoutes = [
-                'admin', 'api', 'dashboard', 'analytics', 
+                'admin', 'api', 'dashboard', 'analytics',
                 'login', 'register', 'preview', 'auth'
             ];
             if (reservedRoutes.includes(customBackHalf.toLowerCase())) {
@@ -160,11 +162,11 @@ exports.urlShortner = async (req, res) => {
 
         }
 
-        if(!shortCode){
-                return res.status(409).json({
-                    success: false,
-                    message: "An error occured"
-                });
+        if (!shortCode) {
+            return res.status(409).json({
+                success: false,
+                message: "An error occured"
+            });
         }
 
         // Create URL record
@@ -178,61 +180,61 @@ exports.urlShortner = async (req, res) => {
 
 
         await TblRedirects.create({
-            urlId:urlData.id,
-            shortUrl:shortCode,
-            originalUrl:url,
-            expiryAt:expiryDate,
-            type:"normal"
+            urlId: urlData.id,
+            shortUrl: shortCode,
+            originalUrl: url,
+            expiryAt: expiryDate,
+            type: "normal"
         })
 
-        if(isQrCode){
+        if (isQrCode) {
             const urlLocations = await generateAndUploadQRCode(shortCode)
             console.log(urlLocations)
             QRCode.create({
-                urlId:urlData.id,
-                shortUrl:shortCode,
-                imageUrl:urlLocations
+                urlId: urlData.id,
+                shortUrl: shortCode,
+                imageUrl: urlLocations
             })
         }
 
         const usageTypesToUpdate = [
-        { key: "links", shouldUpdate: true },
-        { key: "customHalf", shouldUpdate: !!customBackHalf },
-        { key: "qrcodes", shouldUpdate: !!isQrCode },
+            { key: "links", shouldUpdate: true },
+            { key: "customHalf", shouldUpdate: !!customBackHalf },
+            { key: "qrcodes", shouldUpdate: !!isQrCode },
         ];
 
         for (const usage of usageTypesToUpdate) {
-        if (!usage.shouldUpdate) continue;
+            if (!usage.shouldUpdate) continue;
 
-        const existingUsage = userLimitData.find(item => item.type === usage.key);
+            const existingUsage = userLimitData.find(item => item.type === usage.key);
 
-        if (existingUsage) {
-            // Increment usage count
-            await TableUsage.update(
-            { limitused: existingUsage.limitused + 1 },
-            {
-                where: {
-                id: existingUsage.id
-                }
+            if (existingUsage) {
+                // Increment usage count
+                await TableUsage.update(
+                    { limitused: existingUsage.limitused + 1 },
+                    {
+                        where: {
+                            id: existingUsage.id
+                        }
+                    }
+                );
+            } else {
+                // Create a new usage record for this month
+                await TableUsage.create({
+                    user_id: userId,
+                    type: usage.key,
+                    limitused: 1,
+                    month: todayMonth,
+                    year: todayYear
+                });
             }
-            );
-        } else {
-            // Create a new usage record for this month
-            await TableUsage.create({
-            user_id: userId,
-            type: usage.key,
-            limitused: 1,
-            month: todayMonth,
-            year: todayYear
-            });
-        }
         }
 
-        res.status(200).json({ 
-            success: true, 
-            data:{
+        res.status(200).json({
+            success: true,
+            data: {
                 shortCode,
-                id:urlData.id
+                id: urlData.id
             }
         });
 
@@ -250,24 +252,38 @@ exports.getActualUrl = async (req, res) => {
 
     try {
         const shortUrl = req.params.url;
+        const { utm_source, utm_medium, utm_campaign, utm_term, utm_content } = req.query;
+
+        const urlParmeters = {
+            utm_source: utm_source ?? null,
+            utm_medium: utm_medium ?? null,
+            utm_term: utm_term ?? null,
+            utm_campaign: utm_campaign ?? null,
+            utm_content: utm_content ?? null
+        }
 
         // 1. Check Redis cache
         const cached = await redis.get(shortUrl);
         if (cached) {
+            console.log(cached)
             const parsedUrl = JSON.parse(cached);
-            // Run tracking in background
-            trackUser(req, parsedUrl.id);
-            res.redirect(parsedUrl.actualUrl);
+            if(parsedUrl.isTracking)
+            {
+                trackUser(req, parsedUrl.urlId, urlParmeters);
+            }
+            res.redirect(parsedUrl.originalUrl);
             return;
         }
 
         // 2. Fallback to DB
-        const url = await Url.findOne({ where: { shortUrl: shortUrl },raw:true });
-        console.log(url)
+        const url = await tblRedirects.findOne({ where: { shortUrl: shortUrl }, raw: true });
         if (!url) return res.status(404).render('404');
         await redis.set(shortUrl, JSON.stringify(url));
-        await  trackUser(req, url.id);
-        res.redirect(url.actualUrl);
+        if(url.istracking){
+            await trackUser(req, url.urlId, urlParmeters);
+        }
+
+        res.redirect(url.originalUrl);
 
     } catch (err) {
         console.log(err);
@@ -276,7 +292,7 @@ exports.getActualUrl = async (req, res) => {
 };
 
 // Async background tracking function
-async function trackUser(req, urlId) {
+async function trackUser(req, urlId, utmParameters) {
     try {
         const parser = new UAParser(req.headers['user-agent']);
         const uaResult = parser.getResult();
@@ -310,8 +326,8 @@ async function trackUser(req, urlId) {
                 referrerSource = referrenceKey[refHost] || null;
             } catch (e) {
                 console.warn('Invalid referrer URL:', referrerUrl);
+            }
         }
-    }
 
         const eventData = {
             browser,
@@ -321,7 +337,8 @@ async function trackUser(req, urlId) {
             deviceVendor,
             ip,
             referrerUrl,
-            urlId
+            urlId,
+            utmParameters
         }
 
         redis.set(`tracking-event-queue:${nanoid(8)}`, JSON.stringify(eventData));
@@ -350,60 +367,64 @@ async function trackUser(req, urlId) {
 }
 
 exports.updateUrlDetails = async (req, res) => {
-  const { urlId, actualUrl, expiryDate, title } = req.body;
-  const t = await Url.sequelize.transaction(); // start transaction
+    const { urlId, actualUrl, expiryDate, title } = req.body;
+    const t = await Url.sequelize.transaction(); // start transaction
 
-  try {
-    const urlDetails = await Url.findOne({
-      where: { id: urlId, user_id: req.user.id },
-      transaction: t,
-    });
+    try {
+        const urlDetails = await Url.findOne({
+            where: { id: urlId, user_id: req.user.id },
+            transaction: t,
+        });
 
-    if (!urlDetails) {
-      await t.rollback();
-      return res.status(404).json({ success: false, message: "Url not found" });
+        if (!urlDetails) {
+            await t.rollback();
+            return res.status(404).json({ success: false, message: "Url not found" });
+        }
+
+        await Url.update(
+            { actualUrl, expiryDate, name: title },
+            { where: { id: urlId }, transaction: t }
+        );
+
+        await tblRedirects.update(
+            { originalUrl: actualUrl, expiryAt: expiryDate },
+            { where: { urlId }, transaction: t }
+        );
+
+        await t.commit();
+        res.status(200).json({ success: true, message: "Url updated successfully" });
+    } catch (err) {
+        console.error(err);
+        await t.rollback(); // rollback all changes
+        res.status(500).json({ success: false, message: "Internal server error" });
     }
-
-    await Url.update(
-      { actualUrl, expiryDate, name: title },
-      { where: { id: urlId }, transaction: t }
-    );
-
-    await tblRedirects.update(
-      { originalUrl: actualUrl, expiryAt: expiryDate },
-      { where: { urlId }, transaction: t }
-    );
-
-    await t.commit();
-    res.status(200).json({ success: true, message: "Url updated successfully" });
-  } catch (err) {
-    console.error(err);
-    await t.rollback(); // rollback all changes
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
 };
 
 
 
-exports.createQrCodeForlink = async (req,res)=>{
-    try{
+exports.createQrCodeForlink = async (req, res) => {
+    try {
         const userId = req.user.id
-        const {url} = req.body
+        const { url } = req.body
 
 
 
-        const urlDetails = await Url.findOne({where:{
-            shortUrl:url,
-            user_id:userId
-        }})
+        const urlDetails = await Url.findOne({
+            where: {
+                shortUrl: url,
+                user_id: userId
+            }
+        })
 
-        if(!urlDetails) return res.status(400).send("Url Not found")
+        if (!urlDetails) return res.status(400).send("Url Not found")
 
-        const qrDetails = await QRCode.findOne({where:{
-            urlId:urlDetails.id
-        }})
+        const qrDetails = await QRCode.findOne({
+            where: {
+                urlId: urlDetails.id
+            }
+        })
 
-        if(qrDetails) return res.status(200).send("Qr code already exist")
+        if (qrDetails) return res.status(200).send("Qr code already exist")
 
         const now = new Date();
         const todayMonth = now.getMonth();
@@ -411,40 +432,92 @@ exports.createQrCodeForlink = async (req,res)=>{
 
 
         const userLimitData = await TableUsage.findOne({
-            where:{
-                user_id:userId,
-                month:todayMonth,
-                year:todayYear
+            where: {
+                user_id: userId,
+                month: todayMonth,
+                year: todayYear
             }
         })
 
-       const userLimit = userLimitData?.limitused ?? 0;
+        const userLimit = userLimitData?.limitused ?? 0;
 
-        if(userLimit>10) return res.status(200).json({success:false,msg:""})
+        if (userLimit > 10) return res.status(200).json({ success: false, msg: "" })
 
         const qrlink = await generateAndUploadQRCode(url)
 
         await QRCode.create({
-            urlId:urlDetails.id,
-            shortUrl:urlDetails.shortUrl,
-            imageUrl:qrlink
+            urlId: urlDetails.id,
+            shortUrl: urlDetails.shortUrl,
+            imageUrl: qrlink
         })
 
         await TableUsage.create({
-            user_id:userId,
-            type:'qrcodes',
+            user_id: userId,
+            type: 'qrcodes',
             month,
             year,
-            limitused:userLimit+1
+            limitused: userLimit + 1
         })
 
-        return res.status(200).json({success:true,data:{
-            url:qrlink
-        }})
+        return res.status(200).json({
+            success: true, data: {
+                url: qrlink
+            }
+        })
     }
-    catch(err){
+    catch (err) {
         console.log(err)
-        return res.status(500).json({msg:"Internal Server Error"})
+        return res.status(500).json({ msg: "Internal Server Error" })
+    }
+}
+
+exports.createFreeLink = async (req, res) => {
+
+    try {
+
+        const { originalUrl } = req.body
+        const shortCode = await generateUniqueShortCode()
+        const expiryDate = new Date()
+        const now = new Date()
+        expiryDate.setMonth(now.getMonth() + 2)
+
+        const t1 = await db.transaction()
+
+        const url = await Url.create({
+            user_id: '24a4d65b-4674-4995-a9d6-cabdbadc9b5c',
+            name: 'free url',
+            shortUrl: shortCode,
+            actualUrl: originalUrl,
+            expiryDate,
+        }, {
+            transaction: t1
+        })
+
+        await tblRedirects.create({
+            urlId: url.id,
+            shortUrl: shortCode,
+            originalUrl,
+            expiryAt: expiryDate,
+            isTracking:false
+        }, {
+            transaction: t1
+        }
+        )
+
+        t1.commit()
+        res.status(201).json({ success: true, message: 'Free link created successfully',data:{
+            shortUrl:shortCode
+        } })
+
+
+
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({
+            sucess: false,
+            message: "Intenal Server Error"
+        })
     }
 }
 

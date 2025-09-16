@@ -3,11 +3,11 @@ const sequelize = require("../lib/database");
 const TableUrl = require("./TableUrl")
 
 const tblRedirects = sequelize.define("tblRedirect", {
-id: {
-  type: DataTypes.UUID,
-  primaryKey: true,
-  defaultValue: Sequelize.literal("gen_random_uuid()"), // Postgres extension pgcrypto
-},
+    id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: Sequelize.literal("gen_random_uuid()"), // Postgres extension pgcrypto
+    },
     urlId: {
         type: DataTypes.UUID,
         references: {
@@ -30,6 +30,10 @@ id: {
     expiryAt: {
         type: DataTypes.DATEONLY,
         allowNull: false
+    },
+    isTracking:{
+        type:DataTypes.BOOLEAN,
+        defaultValue:true
     }
 
 })

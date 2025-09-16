@@ -67,7 +67,15 @@ export const checkCustomBackHalfAvailable = async (payload)=>{
 // '@/api/linkData.ts'
 export async function updateUrlData({ urlId, payload }) {
   // adjust endpoint to your backend route if different
-    const {data:response} = apiClient.post("/url/update",{urlId,actualUrl:payload.actualUrl,expiryDate:payload.expiryDate,title:payload.title})
+    const {data:response} = await apiClient.post("/url/update",{urlId,actualUrl:payload.actualUrl,expiryDate:payload.expiryDate,title:payload.title})
+    return response
+
+}
+
+
+export async function createFreeLink(payload) {
+  // adjust endpoint to your backend route if different
+    const {data:response} = await apiClient.post("/url/create-free-link",payload)
     return response
 
 }

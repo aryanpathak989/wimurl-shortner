@@ -2,11 +2,15 @@
 
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
-import { ArrowRight, Zap } from "lucide-react"
+import { ArrowLeft, ArrowRight, Loader, Zap } from "lucide-react"
 import { motion } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
 import { FadeIn } from "@/components/animations"
+import { useMutation } from "@tanstack/react-query"
+import { createFreeLink } from "@/api/linkData"
+import { toast } from "react-toastify"
+import LinkCreateModal from "./modal/LinkCreateModal"
 
 const demoUrls = [
   "https://www.example-very-long-url.com/products/category/item",
@@ -32,8 +36,12 @@ export function HeroSection() {
   const [isTyping, setIsTyping] = useState(true)
   const [showResult, setShowResult] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [longUrl, setLongUrl] = useState("");
+  const [shortUrl, setShortUrl] = useState<string | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const heroRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Handle mouse movement for the background effect with immediate response
   useEffect(() => {
@@ -93,6 +101,25 @@ export function HeroSection() {
 
     return () => clearTimeout(timeout)
   }, [displayText, currentUrlIndex, isTyping, showResult, isDeleting])
+
+
+const createLink = useMutation({
+  mutationFn: (payload: { originalUrl: string }) => {
+    return createFreeLink(payload);
+  },
+  onSuccess: (data) => {
+    setShortUrl(data?.data?.shortUrl);
+    setModalOpen(true);
+  },
+  onError: () => {
+    toast.error("Something went wrong. Please try again later!");
+  },
+});
+
+  const handleShorten = async () => {
+    if (!longUrl) return;
+    createLink.mutate({ originalUrl: longUrl })
+  };
 
   return (
     <section
@@ -158,94 +185,52 @@ export function HeroSection() {
             </p>
           </FadeIn>
 
-          {/* Demo Input */}
           <FadeIn direction="up" delay={0.3} className="w-full max-w-2xl">
             <div className="relative">
               <div className="flex items-center rounded-xl bg-muted/80 backdrop-blur-sm border border-border p-4 shadow-md">
-                <div className="flex-1 min-h-[24px] relative overflow-hidden">
-                  <div className="text-left text-sm sm:text-base truncate">
-                    {!showResult ? (
-                      <div className="text-muted-foreground truncate">
-                        {displayText}
-                        <span className="animate-pulse">|</span>
-                      </div>
-                    ) : (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="flex items-center justify-between"
-                      >
-                        <div className="text-left">
-                          <div className="text-xs text-muted-foreground mb-1">Shortened to:</div>
-                          <div className="text-primary font-medium">{shortUrls[currentUrlIndex]}</div>
-                        </div>
-                        <div className="flex items-center text-emerald-600 dark:text-emerald-400 text-sm">
-                          <span className="mr-2">✓</span>
-                          <span className="hidden sm:inline">Ready to share</span>
-                        </div>
-                      </motion.div>
-                    )}
-                  </div>
-                </div>
-                <Button size="sm" className="ml-4 bg-primary hover:bg-primary/90 text-primary-foreground" disabled>
-                  Shorten
+                <input
+                  ref={inputRef}
+                  type="url"
+                  className="flex-1 px-3 py-1.5 rounded focus:outline-none border-0 bg-transparent text-base text-foreground placeholder:text-muted-foreground"
+                  placeholder="Paste your long URL here"
+                  value={longUrl}
+                  onChange={e => setLongUrl(e.target.value)}
+                  autoFocus
+                />
+                <Button
+                  size="lg"
+                  className="ml-4 bg-primary hover:bg-primary/90 text-primary-foreground hidden md:flex gap-2"
+                  onClick={handleShorten}
+                >
+                  Shortner Url
+                  {
+                    createLink.isPending? <Loader className="text-white h-4 w-4"/>: <ArrowRight className= "h-4 w-4 text-primary-foreground/80"/>
+                  }
                 </Button>
               </div>
-
-              {/* Floating stats */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 }}
-                className="absolute -right-4 -top-4 hidden lg:block"
+              <Button
+                size="lg"
+                className="ml-4 bg-primary hover:bg-primary/90 text-primary-foreground md:hidden mt-4"
+                onClick={handleShorten}
               >
-                <div className="rounded-lg bg-card/80 backdrop-blur-sm border border-border p-3 text-xs text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>Live Demo</span>
-                  </div>
-                </div>
-              </motion.div>
+                Shortner Url
+              </Button>
+
+              <div className="mt-2 text-xs text-center text-emerald-600 px-2">
+                Free – No credit card required. <br />
+              </div>
             </div>
           </FadeIn>
 
-          {/* Action Buttons */}
-          <FadeIn direction="up" delay={0.4}>
-            <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 text-lg font-medium"
-                  asChild
-                >
-                  <Link href="/login">
-                    <Zap className="mr-2 h-5 w-5" />
-                    Start Free
-                    <span className="ml-2 text-xs opacity-75">v1.0</span>
-                  </Link>
-                </Button>
-              </motion.div>
 
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-border text-foreground px-8 py-3 text-lg font-medium"
-                  asChild
-                >
-                  <Link href="#features">
-                    Learn More
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-              </motion.div>
-            </div>
-          </FadeIn>
+{
+  modalOpen && <LinkCreateModal setLinkCreatedModule={setModalOpen} shortCode={shortUrl} />
+}
 
           {/* Trust indicators */}
           <FadeIn direction="up" delay={0.5}>
             <div className="flex flex-col items-center gap-4 pt-8">
-              <p className="text-sm text-muted-foreground">Trusted by professionals worldwide</p>
+              <p className="text-sm text-muted-foreground">Sign up to view link analytics for free!</p>
               <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-8 text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 rounded-full bg-emerald-500" />
