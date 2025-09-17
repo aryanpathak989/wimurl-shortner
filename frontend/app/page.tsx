@@ -13,6 +13,7 @@ import {
   Layers,
   Link2,
   MousePointerClick,
+  QrCode,
   Smartphone,
   Tag,
   TrainTrack,
@@ -192,17 +193,14 @@ const { isAuthenticated, profile, firstName } = useAuthProfile()
               </motion.div>
 <motion.div className="flex flex-col justify-center space-y-4 rounded-lg border bg-background p-6 shadow-sm gradient-card-hover hover-lift">
   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
-    <FileText className="h-6 w-6 text-primary" />
+    <QrCode className="h-6 w-6 text-primary" />
   </div>
   <div className="space-y-2">
     <div className="flex items-center gap-2">
-      <h3 className="text-xl font-bold">Form Builder</h3>
-      <span className="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 border border-yellow-200">
-        Coming soon
-      </span>
+      <h3 className="text-xl font-bold">Qr code</h3>
     </div>
     <p className="text-muted-foreground">
-      Create custom forms, collect submissions, and analyze responses with our intuitive form builder.
+      Effortlessly create custom, ready-to-scan QR codes tailored to your brand, featuring your logo along with  detail analytics
     </p>
   </div>
 </motion.div>
