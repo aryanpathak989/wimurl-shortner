@@ -202,7 +202,7 @@ const createLink = useMutation({
                   className="ml-4 bg-primary hover:bg-primary/90 text-primary-foreground hidden md:flex gap-2"
                   onClick={handleShorten}
                 >
-                  Shortner Url
+                  Shorter Url
                   {
                     createLink.isPending? <Loader className="text-white h-4 w-4"/>: <ArrowRight className= "h-4 w-4 text-primary-foreground/80"/>
                   }
@@ -213,7 +213,10 @@ const createLink = useMutation({
                 className="ml-4 bg-primary hover:bg-primary/90 text-primary-foreground md:hidden mt-4"
                 onClick={handleShorten}
               >
-                Shortner Url
+                Shorter Url
+                {
+                    createLink.isPending? <Loader className="text-white h-4 w-4"/>: <ArrowRight className= "h-4 w-4 text-primary-foreground/80"/>
+                  }
               </Button>
 
               <div className="mt-2 text-xs text-center text-emerald-600 px-2">
